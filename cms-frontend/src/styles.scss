@@ -1,0 +1,70 @@
+// Import Angular Material theme
+@use '@angular/material' as mat;
+@include mat.core();
+
+$cms-primary: mat.define-palette(mat.$blue-palette, 700);
+$cms-accent:  mat.define-palette(mat.$light-blue-palette, 400);
+$cms-warn:    mat.define-palette(mat.$red-palette);
+
+$cms-theme: mat.define-light-theme((
+  color: (
+    primary: $cms-primary,
+    accent:  $cms-accent,
+    warn:    $cms-warn
+  ),
+  typography: mat.define-typography-config(
+    $font-family: 'Roboto, sans-serif'
+  ),
+  density: 0
+));
+
+@include mat.all-component-themes($cms-theme);
+
+// ── Reset & Base ─────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  background: #f5f6fa;
+  color: #212121;
+}
+
+// ── Material form-field full-width helper ─────────────────────────
+mat-form-field.full-width { width: 100%; }
+
+// ── Snack bar colours ─────────────────────────────────────────────
+.snack-success .mdc-snackbar__surface {
+  background: #2e7d32 !important;
+  color: #fff !important;
+}
+.snack-error .mdc-snackbar__surface {
+  background: #c62828 !important;
+  color: #fff !important;
+}
+.snack-info .mdc-snackbar__surface {
+  background: #1565c0 !important;
+  color: #fff !important;
+}
+
+// ── Mat card default radius ───────────────────────────────────────
+mat-card {
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08) !important;
+}
+
+// ── Mat table ──────────────────────────────────────────────────────
+.mat-mdc-row:last-child td { border-bottom: none; }
+
+// ── Utility ───────────────────────────────────────────────────────
+.full-width { width: 100%; }
+.spacer { flex: 1 1 auto; }
+
+// ── Scrollbar (WebKit) ────────────────────────────────────────────
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.2);
+  border-radius: 3px;
+}

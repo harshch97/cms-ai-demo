@@ -1,0 +1,100 @@
+<app-page-header
+  [title]="pageTitle"
+  [subtitle]="isEditMode ? 'Update customer and address details' : 'Fill in all required fields to register a new customer'"
+  [showBack]="true">
+</app-page-header>
+
+<!-- Fetching spinner (edit mode) -->
+<app-loading-spinner *ngIf="isFetching" message="Loading customer…"></app-loading-spinner>
+
+<!-- Page-level error -->
+<div *ngIf="pageError" class="page-error-alert">
+  <mat-icon>error_outline</mat-icon>
+  <span>{{ pageError }}</span>
+  <button mat-button (click)="cancel()">Go back</button>
+</div>
+
+<mat-card *ngIf="!isFetching && !pageError" class="form-card">
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate autocomplete="off">
+
+      <!-- ── Customer info section ─────────────────────────── -->
+      <h3 class="section-title">
+        <mat-icon>person</mat-icon> Customer Details
+      </h3>
+
+      <div class="form-grid">
+
+        <!-- Full Name -->
+        <mat-form-field appearance="outline" class="col-half">
+          <mat-label>Full Name</mat-label>
+          <input matInput formControlName="full_name" placeholder="John Doe">
+          <mat-error *ngIf="f['full_name'].hasError('required')">Required</mat-error>
+          <mat-error *ngIf="f['full_name'].hasError('pattern')">Letters and spaces only</mat-error>
+          <mat-error *ngIf="f['full_name'].hasError('maxlength')">Max 150 characters</mat-error>
+        </mat-form-field>
+
+        <!-- Company Name -->
+        <mat-form-field appearance="outline" class="col-half">
+          <mat-label>Company Name</mat-label>
+          <input matInput formControlName="company_name" placeholder="Acme Corp">
+          <mat-error *ngIf="f['company_name'].hasError('required')">Required</mat-error>
+          <mat-error *ngIf="f['company_name'].hasError('maxlength')">Max 150 characters</mat-error>
+        </mat-form-field>
+
+        <!-- Phone Number -->
+        <mat-form-field appearance="outline" class="col-half">
+          <mat-label>Phone Number</mat-label>
+          <mat-icon matPrefix>phone</mat-icon>
+          <input matInput formControlName="phone_number" appNumericOnly placeholder="9876543210">
+          <mat-error *ngIf="f['phone_number'].hasError('required')">Required</mat-error>
+          <mat-error *ngIf="f['phone_number'].hasError('pattern')">Numbers only</mat-error>
+          <mat-error *ngIf="f['phone_number'].hasError('minlength')">Minimum 7 digits</mat-error>
+          <mat-error *ngIf="f['phone_number'].hasError('maxlength')">Maximum 15 digits</mat-error>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="col-half">
+          <mat-label>Email Address</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input matInput formControlName="email" type="email" placeholder="john@acme.com">
+          <mat-error *ngIf="f['email'].hasError('required')">Required</mat-error>
+          <mat-error *ngIf="f['email'].hasError('email')">Enter a valid email</mat-error>
+          <mat-error *ngIf="f['email'].hasError('duplicate')">This email is already registered</mat-error>
+          <mat-error *ngIf="f['email'].hasError('serverError')">{{ f['email'].errors?.['serverError'] }}</mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- ── Address sub-form (create mode only) ───────────────── -->
+      <app-address-form
+        *ngIf="!isEditMode"
+        [addressGroup]="addressGroup">
+      </app-address-form>
+
+      <!-- ── Edit mode: address managed from detail page ───────── -->
+      <div *ngIf="isEditMode" class="addresses-note">
+        <mat-icon>info_outline</mat-icon>
+        <span>
+          To add, edit, or remove addresses for this customer, go back to the
+          <a [routerLink]="['/customers', customerId]">customer detail page</a>.
+        </span>
+      </div>
+
+      <!-- ── Form actions ───────────────────────────────────── -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="cancel()" [disabled]="isLoading">
+          Cancel
+        </button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="isLoading" class="submit-btn">
+          <mat-spinner *ngIf="isLoading" diameter="20" class="spinner-inline"></mat-spinner>
+          <span *ngIf="!isLoading">{{ isEditMode ? 'Save Changes' : 'Create Customer' }}</span>
+          <span *ngIf="isLoading">{{ isEditMode ? 'Saving…' : 'Creating…' }}</span>
+        </button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>

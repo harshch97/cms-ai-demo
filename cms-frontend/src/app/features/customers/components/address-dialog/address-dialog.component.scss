@@ -1,0 +1,35 @@
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+
+  mat-icon {
+    color: #1976d2;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.dialog-content {
+  min-width: 320px;
+  max-width: 600px;
+  padding-top: 8px !important;
+
+  @media (max-width: 599px) {
+    min-width: unset;
+    width: 100%;
+  }
+}
+
+.dialog-actions {
+  padding: 8px 16px 16px;
+  gap: 8px;
+}
+
+.spinner-inline {
+  display: inline-block;
+  margin-right: 6px;
+  vertical-align: middle;
+}

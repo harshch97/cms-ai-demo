@@ -1,0 +1,23 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon>{{ isEditMode ? 'edit_location_alt' : 'add_location_alt' }}</mat-icon>
+  {{ isEditMode ? 'Edit Address' : 'Add New Address' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <app-address-form
+    *ngIf="addressGroup"
+    [addressGroup]="addressGroup"
+    [preloadStateName]="preloadStateName">
+  </app-address-form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button type="button" (click)="cancel()" [disabled]="isSaving">
+    Cancel
+  </button>
+  <button mat-flat-button color="primary" type="button" (click)="save()" [disabled]="isSaving">
+    <mat-spinner *ngIf="isSaving" diameter="18" class="spinner-inline"></mat-spinner>
+    <span *ngIf="!isSaving">{{ isEditMode ? 'Save Changes' : 'Add Address' }}</span>
+    <span *ngIf="isSaving">{{ isEditMode ? 'Saving…' : 'Adding…' }}</span>
+  </button>
+</mat-dialog-actions>

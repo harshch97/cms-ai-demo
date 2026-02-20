@@ -1,0 +1,177 @@
+.detail-card {
+  margin-bottom: 20px;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  mat-card-content { padding-top: 8px !important; }
+}
+
+.avatar-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  color: #1976d2;
+  &.location { color: #e53935; }
+}
+
+.spacer { flex: 1; }
+
+.add-addr-btn {
+  @media (max-width: 599px) { display: none; }
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 8px 0;
+
+  @media (max-width: 599px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: rgba(0,0,0,.5);
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 14px;
+  color: rgba(0,0,0,.87);
+}
+
+// ── Address table ──────────────────────────────────────────
+
+.table-wrapper {
+  overflow-x: auto;
+
+  // Show only on ≥600px
+  @media (max-width: 599px) { display: none; }
+}
+
+.full-width { width: 100%; }
+
+.action-cell {
+  white-space: nowrap;
+  text-align: right;
+  padding-right: 4px;
+}
+
+.addr-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e3f2fd;
+  color: #1976d2;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+// ── Mobile cards ───────────────────────────────────────────
+
+.mobile-addresses {
+  display: none;
+
+  @media (max-width: 599px) { display: block; }
+}
+
+.address-card {
+  margin-bottom: 12px;
+}
+
+.addr-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.addr-line {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.addr-meta {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(0,0,0,.55);
+}
+
+// ── Empty state ────────────────────────────────────────────
+
+.empty-addresses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  gap: 8px;
+  color: rgba(0,0,0,.4);
+
+  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  p { margin: 0; font-size: 15px; }
+}
+
+// ── Mobile add button (below list) ────────────────────────
+
+.mobile-add-btn {
+  display: none;
+  padding-top: 8px;
+
+  @media (max-width: 599px) {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+
+.info-value {
+  font-size: 15px;
+  color: rgba(0,0,0,.85);
+}
+
+.table-wrapper { overflow-x: auto; }
+.full-width { width: 100%; }
+
+.empty-addresses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+  gap: 12px;
+  color: rgba(0,0,0,.45);
+
+  mat-icon { font-size: 40px; width: 40px; height: 40px; }
+}
+
+/* Desktop table, hide mobile */
+.mobile-addresses { display: none; }
+
+@media (max-width: 767px) {
+  .table-wrapper { display: none; }
+
+  .mobile-addresses {
+    display: block;
+    .address-card {
+      margin-bottom: 10px;
+      .addr-line { font-size: 14px; margin: 0 0 4px; }
+      .addr-meta { font-size: 13px; color: rgba(0,0,0,.55); margin: 0; }
+    }
+  }
+}

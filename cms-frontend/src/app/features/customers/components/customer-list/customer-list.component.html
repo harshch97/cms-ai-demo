@@ -1,0 +1,134 @@
+<app-page-header title="Customers" subtitle="Manage all customer records">
+  <button mat-flat-button color="primary" (click)="goToCreate()">
+    <mat-icon>add</mat-icon>
+    Add Customer
+  </button>
+</app-page-header>
+
+<!-- Search bar -->
+<mat-card class="search-card">
+  <mat-card-content>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search customers</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [formControl]="searchCtrl" placeholder="Name, company, email…">
+      <button mat-icon-button matSuffix *ngIf="searchCtrl.value" (click)="clearSearch()" aria-label="Clear">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>
+
+<!-- Loading -->
+<app-loading-spinner *ngIf="isLoading" message="Loading customers…"></app-loading-spinner>
+
+<!-- Table (desktop) -->
+<mat-card *ngIf="!isLoading" class="table-card">
+  <mat-card-content>
+
+    <!-- Empty state -->
+    <div *ngIf="customers.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">group_off</mat-icon>
+      <p>No customers found.</p>
+      <button mat-flat-button color="primary" (click)="goToCreate()">
+        Add your first customer
+      </button>
+    </div>
+
+    <!-- Desktop table -->
+    <div class="table-wrapper" *ngIf="customers.length > 0">
+      <table mat-table [dataSource]="customers" class="full-width" aria-label="Customers">
+
+        <ng-container matColumnDef="full_name">
+          <th mat-header-cell *matHeaderCellDef>Full Name</th>
+          <td mat-cell *matCellDef="let c">
+            <strong>{{ c.full_name }}</strong>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="company_name">
+          <th mat-header-cell *matHeaderCellDef>Company</th>
+          <td mat-cell *matCellDef="let c">{{ c.company_name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="phone_number">
+          <th mat-header-cell *matHeaderCellDef>Phone</th>
+          <td mat-cell *matCellDef="let c">{{ c.phone_number | formatPhone }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let c">{{ c.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-col">Actions</th>
+          <td mat-cell *matCellDef="let c" class="actions-col">
+            <button mat-icon-button color="primary"
+              (click)="goToDetail(c.id)"
+              matTooltip="View details" aria-label="View">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button
+              (click)="goToEdit(c.id, $event)"
+              matTooltip="Edit" aria-label="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn"
+              (click)="confirmDelete(c, $event)"
+              [disabled]="deletingId === c.id"
+              matTooltip="Delete" aria-label="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          class="clickable-row"
+          (click)="goToDetail(row.id)"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalCount"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        showFirstLastButtons
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </div>
+
+    <!-- Mobile card list -->
+    <div class="mobile-list" *ngIf="customers.length > 0">
+      <mat-card *ngFor="let c of customers" class="mobile-card" (click)="goToDetail(c.id)">
+        <mat-card-header>
+          <mat-card-title>{{ c.full_name }}</mat-card-title>
+          <mat-card-subtitle>{{ c.company_name }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p><mat-icon class="inline-icon">phone</mat-icon> {{ c.phone_number | formatPhone }}</p>
+          <p><mat-icon class="inline-icon">email</mat-icon> {{ c.email }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-icon-button (click)="goToEdit(c.id, $event)" aria-label="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="confirmDelete(c, $event)" aria-label="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-paginator
+        [length]="totalCount"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25]"
+        showFirstLastButtons
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </div>
+
+  </mat-card-content>
+</mat-card>

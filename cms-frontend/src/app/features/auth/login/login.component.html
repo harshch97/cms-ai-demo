@@ -1,0 +1,66 @@
+<div class="login-page">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <div class="login-header">
+        <mat-icon class="logo-icon">business_center</mat-icon>
+        <h1 class="login-title">Customer Management</h1>
+        <p class="login-subtitle">Sign in to continue</p>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email address</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="admin@cms.com"
+            autocomplete="email">
+          <mat-error *ngIf="emailCtrl.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="emailCtrl.hasError('email')">Enter a valid email address</mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            autocomplete="current-password">
+          <button mat-icon-button matSuffix type="button"
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Toggle password visibility'">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordCtrl.hasError('required')">Password is required</mat-error>
+          <mat-error *ngIf="passwordCtrl.hasError('minlength')">Minimum 6 characters</mat-error>
+        </mat-form-field>
+
+        <!-- API error message -->
+        <div *ngIf="errorMessage" class="error-alert" role="alert">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Submit -->
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="full-width login-btn"
+          [disabled]="isLoading">
+          <app-loading-spinner *ngIf="isLoading" [diameter]="20"></app-loading-spinner>
+          <span *ngIf="!isLoading">Sign In</span>
+        </button>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,39 @@
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.brand-name {
+  @media (max-width: 399px) { display: none; }
+}
+
+.spacer { flex: 1; }
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  min-height: calc(100vh - 64px);
+}
+
+.user-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: rgba(0,0,0,.6);
+  pointer-events: none;
+}

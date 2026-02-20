@@ -1,0 +1,161 @@
+<app-loading-spinner *ngIf="isLoading" message="Loading customer details…"></app-loading-spinner>
+
+<ng-container *ngIf="!isLoading && customer">
+
+  <app-page-header
+    [title]="customer.full_name"
+    [subtitle]="customer.company_name"
+    [showBack]="true">
+    <button mat-stroked-button (click)="goToEdit()">
+      <mat-icon>edit</mat-icon> Edit
+    </button>
+    <button mat-stroked-button color="warn"
+      (click)="confirmDeleteCustomer()"
+      [disabled]="deletingCustomer">
+      <mat-icon>delete</mat-icon> Delete
+    </button>
+  </app-page-header>
+
+  <!-- Customer info card -->
+  <mat-card class="detail-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="avatar-icon">account_circle</mat-icon>
+      <mat-card-title>Contact Information</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Full Name</span>
+          <span class="info-value">{{ customer.full_name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Company</span>
+          <span class="info-value">{{ customer.company_name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Phone</span>
+          <span class="info-value">{{ customer.phone_number | formatPhone }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Email</span>
+          <span class="info-value">{{ customer.email }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Addresses card -->
+  <mat-card class="detail-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="avatar-icon location">location_on</mat-icon>
+      <mat-card-title>Addresses</mat-card-title>
+      <mat-card-subtitle>
+        {{ customer.addresses.length }} address{{ customer.addresses.length !== 1 ? 'es' : '' }} on file
+      </mat-card-subtitle>
+      <span class="spacer"></span>
+      <button mat-flat-button color="primary" (click)="openAddressDialog()" class="add-addr-btn">
+        <mat-icon>add</mat-icon> Add Address
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <!-- Empty addresses -->
+      <div *ngIf="customer.addresses.length === 0" class="empty-addresses">
+        <mat-icon>location_off</mat-icon>
+        <p>No addresses on file.</p>
+        <button mat-flat-button color="primary" (click)="openAddressDialog()">Add First Address</button>
+      </div>
+
+      <!-- Desktop table -->
+      <div class="table-wrapper" *ngIf="customer.addresses.length > 0">
+        <table mat-table [dataSource]="customer.addresses" class="full-width">
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let a; let i = index">
+              <span class="addr-index">{{ i + 1 }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef>Address</th>
+            <td mat-cell *matCellDef="let a">{{ getFullAddress(a) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="city">
+            <th mat-header-cell *matHeaderCellDef>City</th>
+            <td mat-cell *matCellDef="let a">{{ a.city }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="state">
+            <th mat-header-cell *matHeaderCellDef>State</th>
+            <td mat-cell *matCellDef="let a">{{ a.state }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="pin_code">
+            <th mat-header-cell *matHeaderCellDef>PIN</th>
+            <td mat-cell *matCellDef="let a">{{ a.pin_code }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let a" class="action-cell">
+              <button mat-icon-button color="primary"
+                (click)="openAddressDialog(a)"
+                matTooltip="Edit address"
+                aria-label="Edit address">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn"
+                (click)="confirmDeleteAddress(a)"
+                [disabled]="deletingAddressId === a.id"
+                matTooltip="Delete address"
+                aria-label="Delete address">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="addressColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: addressColumns;"></tr>
+        </table>
+      </div>
+
+      <!-- Mobile address cards -->
+      <div class="mobile-addresses" *ngIf="customer.addresses.length > 0">
+        <mat-card *ngFor="let a of customer.addresses; let i = index" class="address-card">
+          <mat-card-header>
+            <mat-card-title class="addr-card-title">Address {{ i + 1 }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="addr-line">{{ getFullAddress(a) }}</p>
+            <p class="addr-meta">{{ a.city }}, {{ a.state }} – {{ a.pin_code }}</p>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <button mat-icon-button color="primary"
+              (click)="openAddressDialog(a)"
+              aria-label="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn"
+              (click)="confirmDeleteAddress(a)"
+              [disabled]="deletingAddressId === a.id"
+              aria-label="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <!-- Mobile add button (shown on small screens below the list) -->
+      <div class="mobile-add-btn" *ngIf="customer.addresses.length > 0">
+        <button mat-stroked-button color="primary" (click)="openAddressDialog()">
+          <mat-icon>add</mat-icon> Add Another Address
+        </button>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+</ng-container>

@@ -1,0 +1,63 @@
+<div [formGroup]="addressGroup" class="address-form">
+  <h3 class="section-title">
+    <mat-icon>location_on</mat-icon>
+    Address
+    <span *ngIf="optional" class="optional-badge">(optional)</span>
+  </h3>
+
+  <div class="form-grid">
+
+    <!-- House / Flat Number -->
+    <mat-form-field appearance="outline" class="col-half">
+      <mat-label>House / Flat Number</mat-label>
+      <input matInput formControlName="house_flat_number" placeholder="12A">
+      <mat-error *ngIf="f['house_flat_number'].hasError('required')">Required</mat-error>
+      <mat-error *ngIf="f['house_flat_number'].hasError('maxlength')">Max 50 characters</mat-error>
+    </mat-form-field>
+
+    <!-- Building / Street -->
+    <mat-form-field appearance="outline" class="col-half">
+      <mat-label>Building / Street</mat-label>
+      <input matInput formControlName="building_street" placeholder="Baker Street">
+      <mat-error *ngIf="f['building_street'].hasError('required')">Required</mat-error>
+      <mat-error *ngIf="f['building_street'].hasError('maxlength')">Max 150 characters</mat-error>
+    </mat-form-field>
+
+    <!-- Locality / Area -->
+    <mat-form-field appearance="outline" class="col-full">
+      <mat-label>Locality / Area</mat-label>
+      <input matInput formControlName="locality_area" placeholder="Westminster">
+      <mat-error *ngIf="f['locality_area'].hasError('required')">Required</mat-error>
+      <mat-error *ngIf="f['locality_area'].hasError('maxlength')">Max 100 characters</mat-error>
+    </mat-form-field>
+
+    <!-- State -->
+    <mat-form-field appearance="outline" class="col-half">
+      <mat-label>State</mat-label>
+      <mat-select formControlName="state_id">
+        <mat-option *ngFor="let s of states" [value]="s.id">{{ s.name }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="f['state_id'].hasError('required')">Required</mat-error>
+    </mat-form-field>
+
+    <!-- City -->
+    <mat-form-field appearance="outline" class="col-half">
+      <mat-label>City</mat-label>
+      <mat-select formControlName="city" [disabled]="!f['state_id'].value || loadingCities">
+        <mat-option *ngIf="loadingCities" disabled>Loading…</mat-option>
+        <mat-option *ngFor="let c of cities" [value]="c.name">{{ c.name }}</mat-option>
+      </mat-select>
+      <mat-hint *ngIf="!f['state_id'].value">Select a state first</mat-hint>
+      <mat-error *ngIf="f['city'].hasError('required')">Required</mat-error>
+    </mat-form-field>
+
+    <!-- PIN Code -->
+    <mat-form-field appearance="outline" class="col-half">
+      <mat-label>PIN Code</mat-label>
+      <input matInput formControlName="pin_code" appNumericOnly placeholder="400001" maxlength="6">
+      <mat-error *ngIf="f['pin_code'].hasError('required')">Required</mat-error>
+      <mat-error *ngIf="f['pin_code'].hasError('pattern')">Must be exactly 6 digits</mat-error>
+    </mat-form-field>
+
+  </div>
+</div>
